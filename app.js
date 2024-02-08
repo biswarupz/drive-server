@@ -5,7 +5,7 @@ const cors = require("cors");
 const fs = require("fs");
 const exp = require("constants");
 const app = express();
-const port = 3000;
+const port = 8000;
 app.use(cors());
 app.use(express.json());
 const storage = multer.diskStorage({
