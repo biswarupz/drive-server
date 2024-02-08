@@ -15,13 +15,13 @@ Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/google-drive-clone.git
+   git clone https://github.com/your-username/drive-server.git
    ```
 
 2. Navigate to the backend directory:
 
    ```bash
-   cd google-drive-clone/backend
+   cd drive-server
    ```
 
 3. Install dependencies:
