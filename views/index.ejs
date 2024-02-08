@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SeverDrive</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f0f0;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+
+      form {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      input[type="file"] {
+        display: none;
+      }
+
+      label {
+        display: block;
+        width: 80%;
+        max-width: 280px;
+        margin: 0 auto;
+        background-color: #3498db;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      button {
+        display: block;
+        width: 80%;
+        max-width: 300px;
+        margin: 10px auto;
+        background-color: #2ecc71;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .imagenames,
+      .imagess {
+        text-align: center;
+        margin: 20px auto;
+      }
+
+      button.uploaded-img {
+        margin-top: 10px;
+        background-color: #e74c3c;
+      }
+
+      .uploaded-img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+      }
+      .imagess {
+        width: 30vw;
+        padding: 5px;
+      }
+
+      @media (max-width: 460px) {
+        .imagess {
+          width: 80vw;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Server Drive</h1>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+      <input
+        type="file"
+        name="file"
+        id="fileInput"
+        required
+        onchange="displayFileName()"
+      />
+      <label for="fileInput" id="fileInputLabel">Choose a File</label>
+      <button type="submit">Upload</button>
+    </form>
+
+    <div class="imagenames"></div>
+    <div class="imagess"></div>
+
+    <script>
+      async function fileSend() {
+        const filenames = await fetch("/files");
+        const files = await filenames.json();
+
+        const filenamediv = document.querySelector(".imagenames");
+
+        for (let i = 0; i < files.length; i++) {
+          const imgName = files[i];
+          const para = document.createElement("button");
+          para.style.backgroundColor = "gray";
+          para.textContent = imgName;
+          para.addEventListener("click", async () => {
+            //location.reload();
+            try {
+              const existingImages = document.querySelectorAll(".uploaded-img");
+              existingImages.forEach((img) => img.remove());
+              const response = await fetch(`/img?img=${imgName}`, {
+                method: "POST",
+              });
+
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+
+              const blob = await response.blob();
+              const imgSrc = URL.createObjectURL(blob);
+              console.log(imgSrc);
+
+              // Display the image by creating an image element
+              const imgElement = document.createElement("img");
+              const imagess = document.querySelector(".imagess");
+              //imgElement.style.width = "100vw";
+              imgElement.src = imgSrc;
+              imgElement.classList.add("uploaded-img"); // Add a class for identifying the image
+              imagess.appendChild(imgElement);
+            } catch (error) {
+              console.error("Error:", error);
+            }
+          });
+
+          filenamediv.appendChild(para);
+        }
+      }
+
+      fileSend();
+      function displayFileName() {
+        const fileInput = document.getElementById("fileInput");
+        const fileName = fileInput.files[0].name;
+        document.getElementById("fileInputLabel").textContent = fileName;
+      }
+    </script>
+  </body>
+</html>
