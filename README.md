@@ -65,6 +65,6 @@ Now, you should be able to access your local drive from your phone and manage im
 ## Notes
 
 - Ensure that both devices are on the same network for seamless connectivity.
-- The default port for the server is set to `5050`, but you can modify it in the server configuration if needed.
+- The default port for the server is set to `8000`, but you can modify it in the server configuration if needed.
 
 Feel free to contribute, report issues, or make suggestions!
